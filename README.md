@@ -14,6 +14,11 @@ First, build and install the provider.
 make install
 ```
 
+windows install
+```shell
+make wininstall
+```
+
 Then, run the following command to initialize the workspace and apply the sample configuration.
 
 ```shell
