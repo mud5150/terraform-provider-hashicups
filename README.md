@@ -1,4 +1,7 @@
-# Terraform Provider Hashicups
+# Provider tutorial
+https://learn.hashicorp.com/tutorials/terraform/provider-setup?in=terraform/providers
+
+## Terraform Provider Hashicups
 
 Run the following command to build the provider
 
@@ -6,7 +9,7 @@ Run the following command to build the provider
 go build -o terraform-provider-hashicups
 ```
 
-## Test sample configuration
+### Test sample configuration
 
 First, build and install the provider.
 

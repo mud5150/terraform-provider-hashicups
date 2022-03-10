@@ -2,7 +2,10 @@ module terraform-provider-hashicups
 
 go 1.17
 
-require github.com/hashicorp/terraform-plugin-sdk/v2 v2.10.1
+require (
+	github.com/hashicorp-demoapp/hashicups-client-go v0.0.0-20220214055102-bd8bf734c61c
+	github.com/hashicorp/terraform-plugin-sdk/v2 v2.10.1
+)
 
 require (
 	github.com/agext/levenshtein v1.2.2 // indirect
