@@ -30,11 +30,12 @@ func Provider() *schema.Provider {
 			"hashicups_coffees": dataSourceCoffees(), // via their "main" function that returns a schema.Resource
 			"hashicups_order":   dataSourceOrder(),
 		},
+		ConfigureContextFunc: providerConfigure, // This configures the client for the provider and allows retrieval via provider meta
 	}
 }
 
-// This must get called by convention as part of an interface, however I can't find the invoker yet.
-func ProviderConfigure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
+//
+func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	username := d.Get("username").(string)
 	password := d.Get("password").(string)
 

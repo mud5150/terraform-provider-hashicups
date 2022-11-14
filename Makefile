@@ -41,3 +41,7 @@ testacc:
 clean_example:
 	rm -rf ./examples/.terraform
 	rm -f ./examples/.terraform.lock.hcl
+
+test_example:
+	terraform -chdir=./examples init --upgrade
+	terraform -chdir=./examples apply --auto-approve
