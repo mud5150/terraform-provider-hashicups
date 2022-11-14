@@ -8,7 +8,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// Provider -
+// Provider function returns a *schema.Provider. Here we are creating a schema.Provider in
+// place. The schema provider will have references to all configuration, resources, and data sources.
 func Provider() *schema.Provider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
@@ -20,16 +21,19 @@ func Provider() *schema.Provider {
 			"password": &schema.Schema{
 				Type:        schema.TypeString,
 				Optional:    true,
+				Sensitive:   true,
 				DefaultFunc: schema.EnvDefaultFunc("HASHICUPS_PASSWORD", nil),
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{},
-		DataSourcesMap: map[string]*schema.Resource{
-			"hashicups_coffees": dataSourceCoffees(),
+		DataSourcesMap: map[string]*schema.Resource{ // Data source map will reference all data sources
+			"hashicups_coffees": dataSourceCoffees(), // via their "main" function that returns a schema.Resource
+			"hashicups_order":   dataSourceOrder(),
 		},
 	}
 }
 
+// This must get called by convention as part of an interface, however I can't find the invoker yet.
 func ProviderConfigure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	username := d.Get("username").(string)
 	password := d.Get("password").(string)
@@ -37,10 +41,24 @@ func ProviderConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 	var diags diag.Diagnostics
 
 	if (username != "") && (password != "") {
-		c, err := hashicups.NewClient(nil, nil, nil)
+		c, err := hashicups.NewClient(nil, &username, &password)
 		if err != nil {
-			return nil, diag.FromErr(err)
+			diags = append(diags, diag.Diagnostic{
+				Severity: diag.Error,
+				Summary:  "Unable to create HashiCups client",
+				Detail:   "Unable to auth user for authenticated HashiCups client",
+			})
+
+			return nil, diags
 		}
+
+		return c, diags
 	}
 
+	c, err := hashicups.NewClient(nil, nil, nil)
+	if err != nil {
+		return nil, diag.FromErr(err)
+	}
+
+	return c, diags
 }

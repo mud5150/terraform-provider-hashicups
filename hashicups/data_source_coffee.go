@@ -12,9 +12,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+// Each resource or data source has a main entrypoint function that returns
+// schema.Resource. This will hold the resource schema as well as a reference to each
+// CRUD function
 func dataSourceCoffees() *schema.Resource {
 	return &schema.Resource{
-		ReadContext: dataSourceCoffeesRead,
+		ReadContext: dataSourceCoffeesRead, // Reference to function that does the read op
 		Schema: map[string]*schema.Schema{
 			"coffees": &schema.Schema{
 				Type:     schema.TypeList,
